@@ -358,6 +358,9 @@ function Library:Window()
         options = {}
     end
 
+    
+    local Window = {Properties = {}}
+
     local NewWindow = NewInstance("Frame", {
         Name = "mainframe";
         Parent = Library.holder;
