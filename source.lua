@@ -18,7 +18,7 @@ local Library = {
     title = startupArgs.cheatname or 'Title',
     Folders = {
         Default = startupArgs.cheatname or 'Title',
-        Config = startupArgs.cheatname or 'Title'..'/'..startupArgs.gamename or 'Unknown'
+        Config = startupArgs.cheatname ..'/'.. startupArgs.gamename or 'UI Library/Unknown'
     },
     Fonts = {
         Menu = {},
@@ -353,12 +353,10 @@ function Library:Watermark(options)
     return Watermark
 end
 
-function Library:Window(options)
+function Library:Window()
     if not options then
         options = {}
     end
-
-    local Window = {Name = Library.title, Properties = {}}
 
     local NewWindow = NewInstance("Frame", {
         Name = "mainframe";
@@ -410,7 +408,7 @@ function Library:Window(options)
         Size = UDim2.new(1, 0, 0, 20);
         ZIndex = 5;
         FontFace = Library.Fonts.Types.ProggyTiny;
-        Text = Window.Name;
+        Text = Library.title;
         TextColor3 = Color3.fromRGB(255, 255, 255);
         TextSize = 9.000;
         TextStrokeTransparency = 0.000;
@@ -524,7 +522,10 @@ function Library:Window(options)
         end
     end)
 
-    return setmetatable(Window,Library)
+    for k, v in pairs(Library) do
+        Window[k] = v
+    end
+    return Window
 end
 
 function Library:Tab(options)
@@ -647,7 +648,10 @@ function Library:Tab(options)
 	end)
 
     table.insert(Library.tabammount, Tab)
-    return setmetatable(Tab, Library.tabs)
+    for k, v in pairs(Library.tabs) do
+        Tab[k] = v
+    end
+    return Tab
 end
 
 function Library.tabs:Section(options)
@@ -717,7 +721,10 @@ function Library.tabs:Section(options)
         Main = SectionContent
     }
     --
-    return setmetatable(Section, Library.sections)
+    for k, v in pairs(Library.sections) do
+        Section[k] = v
+    end
+    return Section
 end
 
 function Library.tabs:MultiSection(options)
@@ -852,7 +859,10 @@ function Library.tabs:MultiSection(options)
             Main = SectionContent;
         };
 
-        SectionShit2.RealSections[#SectionShit2.RealSections + 1] = setmetatable(MultiSection, Library.sections)
+        for k, v in pairs(Library.sections) do
+            MultiSection[k] = v
+        end
+        SectionShit2.RealSections[#SectionShit2.RealSections + 1] = MultiSection        
     end
 
     Section.Page.Sections[#Section.Page.Sections + 1] = Section;
