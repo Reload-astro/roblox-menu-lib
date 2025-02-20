@@ -1,49 +1,42 @@
--- Example of using all features of the UI Library
-
-local ui = loadstring(game:HttpGet('https://raw.githubusercontent.com/Reload-astro/roblox-menu-lib/refs/heads/main/source.lua'))({
+local Library = loadstring(game:HttpGet('https://raw.githubusercontent.com/Reload-astro/roblox-menu-lib/refs/heads/main/source.lua'))({
     cheatname = "Example UI",
     gamename = "Example Game",
     color = Color3.fromRGB(255, 100, 100) -- Custom accent color
 })
 
--- Create Tabs
-local mainTab = ui:CreateTab("Main")
-local settingsTab = ui:CreateTab("Settings")
+local window = Library:Window()
+local mainTab = window:Tab("Main")
+local settingsTab = window:Tab("Settings")
 
--- Main Tab Sections and Elements
-local mainSection = mainTab:CreateSection("Main Features")
-mainSection:CreateButton("Click Me", function()
-    print("Button Clicked!")
+local mainSection = mainTab:Section("Main Features")
+local settingsSection = settingsTab:Section("Settings")
+
+-- Button Example
+mainSection:Button("Click Me", function()
+    print("Button clicked!")
 end)
 
-mainSection:CreateToggle("Enable Feature", false, function(state)
-    print("Feature Enabled: ", state)
+-- Toggle Example
+mainSection:Toggle("Enable Feature", false, function(value)
+    print("Feature enabled: ", value)
 end)
 
-mainSection:CreateSlider("Adjust Value", 0, 100, 50, function(value)
-    print("Slider Value: ", value)
+-- Slider Example
+mainSection:Slider("Adjust Value", 1, 100, 50, function(value)
+    print("Slider set to: ", value)
 end)
 
-mainSection:CreateTextbox("Enter Text", "Default", function(text)
-    print("Text Entered: ", text)
-end)
-
-mainSection:CreateDropdown("Choose Option", {"Option 1", "Option 2", "Option 3"}, function(selected)
+-- Dropdown Example
+mainSection:Dropdown("Select Option", {"Option 1", "Option 2", "Option 3"}, function(selected)
     print("Selected: ", selected)
 end)
 
-mainSection:CreateKeybind("Toggle UI", Enum.KeyCode.RightShift, function()
-    ui:Toggle()
+-- Keybind Example
+settingsSection:Keybind("Toggle Library", Enum.KeyCode.F, function()
+    window:Toggle()
 end)
 
--- Settings Tab Elements
-local settingsSection = settingsTab:CreateSection("Settings")
-settingsSection:CreateColorPicker("UI Color", Color3.fromRGB(255, 100, 100), function(color)
-    ui.accent = color
+-- Color Picker Example
+settingsSection:Colorpicker("Choose Color", Color3.fromRGB(255, 0, 0), function(color)
+    print("Color selected: ", color)
 end)
-
--- Notification Example
-ui:CreateNotification("Welcome", "This is an example UI.", 5)
-
--- Finalize and Display UI
-ui:Init()
