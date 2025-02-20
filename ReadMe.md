@@ -7,7 +7,6 @@ This repository demonstrates how to use all features of the UI Library. It inclu
 - Buttons
 - Toggles
 - Sliders
-- Textboxes
 - Dropdowns
 - Keybinds
 - Color Pickers
@@ -26,56 +25,51 @@ This repository demonstrates how to use all features of the UI Library. It inclu
 ## Usage
 ### Creating Tabs and Sections
 ```lua
-local mainTab = ui:CreateTab("Main")
-local mainSection = mainTab:CreateSection("Main Features")
+local window = ui:Window()
+local mainTab = window:Tab("Main")
+local mainSection = mainTab:Section("Main Features")
 ```
 
 ### Adding Elements
 - **Button**
     ```lua
-    mainSection:CreateButton("Click Me", function()
+    mainSection:Button("Click Me", function()
         print("Button Clicked!")
     end)
     ```
 - **Toggle**
     ```lua
-    mainSection:CreateToggle("Enable Feature", false, function(state)
+    mainSection:Toggle("Enable Feature", false, function(state)
         print("Feature Enabled: ", state)
     end)
     ```
 - **Slider**
     ```lua
-    mainSection:CreateSlider("Adjust Value", 0, 100, 50, function(value)
+    mainSection:Slider("Adjust Value", 0, 100, 50, function(value)
         print("Slider Value: ", value)
-    end)
-    ```
-- **Textbox**
-    ```lua
-    mainSection:CreateTextbox("Enter Text", "Default", function(text)
-        print("Text Entered: ", text)
     end)
     ```
 - **Dropdown**
     ```lua
-    mainSection:CreateDropdown("Choose Option", {"Option 1", "Option 2", "Option 3"}, function(selected)
+    mainSection:Dropdown("Choose Option", {"Option 1", "Option 2", "Option 3"}, function(selected)
         print("Selected: ", selected)
     end)
     ```
 - **Keybind**
     ```lua
-    mainSection:CreateKeybind("Toggle UI", Enum.KeyCode.RightShift, function()
+    mainSection:Keybind("Toggle UI", Enum.KeyCode.RightShift, function()
         ui:Toggle()
     end)
     ```
 
 ### Notifications
 ```lua
-ui:CreateNotification("Welcome", "This is an example UI.", 5)
+ui:Notification("Welcome", "This is an example UI.", 5)
 ```
 
 ### Color Picker
 ```lua
-settingsSection:CreateColorPicker("UI Color", Color3.fromRGB(255, 100, 100), function(color)
+settingsSection:Colorpicker("UI Color", Color3.fromRGB(255, 100, 100), function(color)
     ui.accent = color
 end)
 ```
@@ -87,4 +81,3 @@ ui:Init()
 
 ## License
 This project is licensed under the MIT License.
-
