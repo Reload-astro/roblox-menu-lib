@@ -84,22 +84,26 @@ local Library = {
     notifications = 0,
 }
 
-local Players, UserInputService, LocalPlayer, INew = game:GetService("Players"), game:GetService("UserInputService"), game:GetService("Players").LocalPlayer, Instance.new
+local gs = function(v)
+    return cloneref(game:GetService(v))
+end
+
+local Services = {
+    Players = gs("Players"),
+    UserInputService = gs("UserInputService")
+}
+
 local Flags = {}
-local Mouse = LocalPlayer:GetMouse()
+local Mouse = Services.Players.LocalPlayer:GetMouse()
 local CurrentList = {}
 
 Library.__index = Library
 Library.tabs.__index = Library.tabs
 Library.sections.__index = Library.sections
 
-if isfile("menu_plex.font") then
-	delfile("menu_plex.font")
-end
-
-if not isfile("ProggyTiny.ttf") then
-    writefile("ProggyTiny.ttf", game:HttpGet("https://github.com/Reload-astro/roblox-menu-lib/raw/refs/heads/main/ProggyTiny.ttf"))
-end
+-- if not isfile("ProggyTiny.ttf") then
+--     writefile("ProggyTiny.ttf", game:HttpGet("https://github.com/Reload-astro/roblox-menu-lib/raw/refs/heads/main/ProggyTiny.ttf"))
+-- end
 
 local round = function(number,float)
     return float * math.floor(number / float)
@@ -129,7 +133,7 @@ Library.Fonts.Types.ProggyTiny = Font.new(Library.Fonts.Menu:Register_Font("Prog
 }))
 
 local function NewInstance(Class, Properties)
-    local NewInstance = INew(Class)
+    local NewInstance = Instance.new(Class)
 
     for Property, Value in next, Properties do
         NewInstance[Property] = Value 
@@ -519,7 +523,7 @@ function Library:Window()
         end
     end)
 
-    UserInputService.InputChanged:Connect(function(input)
+    Services.UserInputService.InputChanged:Connect(function(input)
         if input == dragInput and Library.dragging then
             update(input)
         end
@@ -1187,7 +1191,7 @@ function Library.sections:Toggle(options)
         local Alpha = Colorpicker.Alpha
     
         local function SetState()
-            local MousePosition = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y - 37) 
+            local MousePosition = Vector2.new(Services.UserInputService:GetMouseLocation().X, Services.UserInputService:GetMouseLocation().Y - 37) 
             
             local RelativePaletteX = (MousePosition.X - Palette.AbsolutePosition.X)
             local RelativePaletteY = (MousePosition.Y - Palette.AbsolutePosition.Y)
@@ -1292,7 +1296,7 @@ function Library.sections:Toggle(options)
             end
         end)
     
-        UserInputService.InputChanged:Connect(function(input)
+        Services.UserInputService.InputChanged:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.MouseMovement and SlidingPalette or SlidingAlpha or SlidingHue then
                 SetState()
             end
@@ -1409,7 +1413,7 @@ function Library.sections:Toggle(options)
                 keybutton.TextColor3 = Library.accent
     
                 Keybind.Binding = 
-                    game:GetService("UserInputService").InputBegan:Connect(
+                    Services.UserInputService.InputBegan:Connect(
                     function(input, gpe)
                         set(
                             input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode
@@ -1423,7 +1427,7 @@ function Library.sections:Toggle(options)
             end
         end)
         --
-        game:GetService("UserInputService").InputBegan:Connect(function(inp)
+        Services.UserInputService.InputBegan:Connect(function(inp)
             if (inp.KeyCode == Key or inp.UserInputType == Key) and not Keybind.Binding and not Keybind.UseKey then
                 if Keybind.Mode == "Hold" then
                     if Keybind.Flag then
@@ -1444,7 +1448,7 @@ function Library.sections:Toggle(options)
             end
         end)
         --
-        game:GetService("UserInputService").InputEnded:Connect(function(inp)
+        Services.UserInputService.InputEnded:Connect(function(inp)
             if Keybind.Mode == "Hold" and not Keybind.UseKey then
                 if Key ~= "" or Key ~= nil then
                     if inp.KeyCode == Key or inp.UserInputType == Key then
@@ -1757,7 +1761,7 @@ function Library.sections:Slider(options)
         end
     end)
 
-    UserInputService.InputChanged:Connect(function(input)
+    Services.UserInputService.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement then
             if Sliding then
                 Library.dragging = nil
@@ -2363,7 +2367,7 @@ function Library.sections:Colorpicker(options)
 	local Alpha = Colorpicker.Alpha
 
     local function SetState()
-        local MousePosition = Vector2.new(UserInputService:GetMouseLocation().X, UserInputService:GetMouseLocation().Y - 37) 
+        local MousePosition = Vector2.new(Services.UserInputService:GetMouseLocation().X, Services.UserInputService:GetMouseLocation().Y - 37) 
         
         local RelativePaletteX = (MousePosition.X - Palette.AbsolutePosition.X)
         local RelativePaletteY = (MousePosition.Y - Palette.AbsolutePosition.Y)
@@ -2468,7 +2472,7 @@ function Library.sections:Colorpicker(options)
         end
     end)
 
-    UserInputService.InputChanged:Connect(function(input)
+    Services.UserInputService.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement and SlidingPalette or SlidingAlpha or SlidingHue then
             SetState()
         end
@@ -2613,7 +2617,7 @@ function Library.sections:Keybind(options)
 			keybutton.TextColor3 = Library.accent
 
 			Keybind.Binding = 
-				game:GetService("UserInputService").InputBegan:Connect(
+				Services.UserInputService.InputBegan:Connect(
 				function(input, gpe)
 					set(
 						input.UserInputType == Enum.UserInputType.Keyboard and input.KeyCode
@@ -2627,7 +2631,7 @@ function Library.sections:Keybind(options)
 		end
 	end)
 	--
-	game:GetService("UserInputService").InputBegan:Connect(function(inp)
+	Services.UserInputService.InputBegan:Connect(function(inp)
 		if (inp.KeyCode == Key or inp.UserInputType == Key) and not Keybind.Binding and not Keybind.UseKey then
 			if Keybind.Mode == "Hold" then
 				if Keybind.Flag then
@@ -2648,7 +2652,7 @@ function Library.sections:Keybind(options)
 		end
 	end)
 	--
-	game:GetService("UserInputService").InputEnded:Connect(function(inp)
+	Services.UserInputService.InputEnded:Connect(function(inp)
 		if Keybind.Mode == "Hold" and not Keybind.UseKey then
 			if Key ~= "" or Key ~= nil then
 				if inp.KeyCode == Key or inp.UserInputType == Key then
@@ -3455,7 +3459,7 @@ function Library.tabs:PlayerList(options)
                 local ID = `{PlayerList.CurrentPlr.UserId}`
                 local Age = `{PlayerList.CurrentPlr.AccountAge} days old`
                 local Health = `health: {PlayerList.CurrentPlr.Character.Humanoid.Health}`
-                local ImageData = game:GetService("Players"):GetUserThumbnailAsync(PlayerList.CurrentPlr.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+                local ImageData = Services.Players:GetUserThumbnailAsync(PlayerList.CurrentPlr.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
 
                 Playername1.Text = Name 
                 playerid1.Text = ID 
@@ -3521,7 +3525,7 @@ function Library.tabs:PlayerList(options)
                 TextXAlignment = Enum.TextXAlignment.Left;
             })
 
-            if option == LocalPlayer then
+            if option == Services.Players.LocalPlayer then
                 NewPlayerStatus.Text = "LocalPlayer"
                 NewPlayerStatus.TextColor3 = Color3.fromRGB(0,0,255)
             end
@@ -3548,7 +3552,7 @@ function Library.tabs:PlayerList(options)
                     local Name = `{PlayerList.CurrentPlr.DisplayName} (@{PlayerList.CurrentPlr.Name})`
                     local ID = `{PlayerList.CurrentPlr.UserId}`
                     local Age = `{PlayerList.CurrentPlr.AccountAge} days old`
-                    local ImageData = game:GetService("Players"):GetUserThumbnailAsync(PlayerList.CurrentPlr.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+                    local ImageData = Services.Players:GetUserThumbnailAsync(PlayerList.CurrentPlr.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
     
                     Playername1.Text = Name 
                     playerid1.Text = ID 
@@ -3584,13 +3588,13 @@ function Library.tabs:PlayerList(options)
         Library.flags[PlayerList.Flag] = Choosen
     end
     -- 
-    CreateOptions(game.Players:GetPlayers())
+    CreateOptions(Services.Players:GetPlayers())
     -- 
     friendly.MouseButton1Down:Connect(function()
         if PlayerList.CurrentPlr ~= nil and table.find(Library.priorities, PlayerList.CurrentPlr) then
             table.remove(Library.friendly, table.find(Library.priorities, PlayerList.CurrentPlr))
         end
-        if  PlayerList.CurrentPlr ~= LocalPlayer then
+        if  PlayerList.CurrentPlr ~= Services.Players.LocalPlayer then
             if PlayerList.CurrentPlr ~= nil and not table.find(Library.friendly, PlayerList.CurrentPlr) then
                 table.insert(Library.friendly, PlayerList.CurrentPlr)
                 OptionInstances[PlayerList.CurrentPlr].Text2.Text = "Friendly"
@@ -3608,7 +3612,7 @@ function Library.tabs:PlayerList(options)
             table.remove(Library.priorities, table.find(Library.friendly, PlayerList.CurrentPlr))
         end
 
-        if  PlayerList.CurrentPlr ~= LocalPlayer then
+        if  PlayerList.CurrentPlr ~= Services.Players.LocalPlayer then
             if PlayerList.CurrentPlr ~= nil and not table.find(Library.priorities, PlayerList.CurrentPlr) then
                 table.insert(Library.priorities, PlayerList.CurrentPlr)
                 OptionInstances[PlayerList.CurrentPlr].Text2.Text = "Prioritized"
@@ -3625,7 +3629,7 @@ function Library.tabs:PlayerList(options)
         if PlayerList.CurrentPlr ~= nil and table.find(Library.enemies, PlayerList.CurrentPlr) then
             table.remove(Library.friends, table.find(Library.enemies, PlayerList.CurrentPlr))
         end
-        if  PlayerList.CurrentPlr ~= LocalPlayer then
+        if  PlayerList.CurrentPlr ~= Services.Players.LocalPlayer then
             if PlayerList.CurrentPlr ~= nil and not table.find(Library.friends, PlayerList.CurrentPlr) then
                 table.insert(Library.friends, PlayerList.CurrentPlr)
                 OptionInstances[PlayerList.CurrentPlr].Text2.Text = "Friend"
@@ -3643,7 +3647,7 @@ function Library.tabs:PlayerList(options)
             table.remove(Library.enemies, table.find(Library.friends, PlayerList.CurrentPlr))
         end
 
-        if  PlayerList.CurrentPlr ~= LocalPlayer then
+        if  PlayerList.CurrentPlr ~= Services.Players.LocalPlayer then
             if PlayerList.CurrentPlr ~= nil and not table.find(Library.enemies, PlayerList.CurrentPlr) then
                 table.insert(Library.enemies, PlayerList.CurrentPlr)
                 OptionInstances[PlayerList.CurrentPlr].Text2.Text = "Enemy"
@@ -3656,12 +3660,12 @@ function Library.tabs:PlayerList(options)
         end
     end)
     --
-    game.Players.PlayerAdded:Connect(function()
-        PlayerList:Refresh(game.Players:GetPlayers(), true)
+    Services.Players.PlayerAdded:Connect(function()
+        PlayerList:Refresh(Services.Players:GetPlayers(), true)
     end)
     --
-    game.Players.PlayerRemoving:Connect(function()
-        PlayerList:Refresh(game.Players:GetPlayers(), true)
+    Services.Players.PlayerRemoving:Connect(function()
+        PlayerList:Refresh(Services.Players:GetPlayers(), true)
     end)
     -- Real Position
     self.Properties.Left.Position = UDim2.new(0,7,0,365)
